@@ -1,0 +1,337 @@
+2004-05-28  Junichi Uekawa  <dancer@debian.org>
+
+	* configure.ac: 0.20.10.cvs.1
+
+	* libdshconfig.spec: Add from Erik Wasser <ew@iquer.net>
+
+	* Makefile.am (EXTRA_DIST): add libdshconfig.spec
+
+2004-01-06  Junichi Uekawa  <dancer@debian.org>
+
+	* configure.ac: 0.20.10
+	
+	* libdshconfig.c: fix from Pere for AIX build failure
+	Note that the changes cause a warning message as follows on most architectures, but it's harmless.
+	  gcc -DHAVE_CONFIG_H -I. -I. -I. -I. -I/home/dancer/local/include/ -O2 -Wall -g -MT libdshconfig.lo -MD -MP -MF .deps/libdshconfig.Tpo -c libdshconfig.c  -fPIC -DPIC -o .libs/libdshconfig.o
+          libdshconfig.c:249: warning: `rpl_malloc' defined but not used
+
+2004-01-05  Junichi Uekawa  <dancer@debian.org>
+
+	* configure.ac: 0.20.9
+
+	* Makefile.am (upload-dist-all): update build rules to remove mikilab
+
+	* libdshconfig.c: update copyright notice to include 2004.
+
+	* libdshconfig.c (rpl_malloc): define rpl_malloc function so that 
+	build succeeds with AIX. Mandated since autoconf 2.55.
+	Reported by Petter Reinholdtsen <pere@hungry.com>
+
+2003-07-19  Junichi Uekawa  <dancer@debian.org>
+
+	* configure.ac: 0.20.8.cvs.1
+
+2002-12-07  Junichi Uekawa  <dancer@debian.org>
+
+	* autogen.sh: Copied from dlisp, to allow bootstrapping with
+	automake1.7 and autoconf2.5
+
+2002-11-09  Junichi Uekawa  <dancer@debian.org>
+
+	* configure.ac: 0.20.8
+	added a test for sane long-line processing.
+
+	* Makefile.am (TESTS): add the long-line test.
+	requires perl to run.
+
+	* tests/test-longline.sh: heavy-load testing.
+
+2002-10-23  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/control (Build-Depends): update to add doc++
+
+2002-10-22  Junichi Uekawa  <dancer@debian.org>
+
+	* configure.ac: 0.20.7.
+	merge 0.20.6 and 0.20.5.cvs.2, which was not merged.
+
+2002-10-21  Junichi Uekawa  <dancer@debian.org>
+
+	* configure.ac: 0.20.6
+
+2002-10-12  Junichi Uekawa  <dancer@debian.org>
+
+	* configure.ac: 0.20.5.cvs.2
+	
+	* libdshconfig.c (read_oneline): use size_t for getline.
+
+	* Makefile.am (clean-local): clean doc.
+	(doc): create doc using doc++
+
+	* configure.ac: check for DOCPP
+
+2002-10-09  Junichi Uekawa  <dancer@debian.org>
+
+	* configure.ac: 0.20.5.cvs.1
+	change version so that we know
+
+2002-10-07  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/rules: remove unneeded variables.
+
+	* debian/control (Standards-Version): 3.5.7
+
+2002-10-03  Junichi Uekawa  <dancer@debian.org>
+
+	* autogen.sh: ordering of autogen fixed.
+	fix autogen.
+
+	* configure.ac: back-support automake 1.5. Debian 3.0r0 
+	only has automake 1.5
+
+2002-09-30  Junichi Uekawa  <dancer@debian.org>
+
+	* configure.ac: 0.20.5
+
+	* tests/test-basic.sh: -u option to diff is not available on 
+	AIX diff. Do not use it.
+
+2002-09-25  Junichi Uekawa  <dancer@debian.org>
+
+	* configure.ac: 0.20.4 -- added testsuite, and make them run.
+
+	* tests/test-dshconfig-searchdata.sh (READINGSOURCE): fix this.
+
+	* libdshconfig.c (open_dshconfig): return NULL when given file pointer is NULL.
+
+	* tests/test-dshconfig-searchdata.c (main): check if open_dshconfig fails with NULL input.
+	It SEGV's currently.
+
+	* Makefile.am (EXTRA_DIST): use a shell script instead.
+	Give up on trying to run a binary program, it is not flexible.
+
+	* libdshconfig.c (dshconfig_splitline): NULL on failure.
+
+	* Makefile.am (test_dshconfig_searchdata_SOURCES) 
+	(test_dshconfig_searchdata_LDADD, check_PROGRAMS): add tests/test-dshconfig-searchdata
+	(TESTS): add tests/test-dshconfig-searchdata
+	(testshell): split out shell scripts
+	(EXTRA_DIST): use testshell for extra dist target.
+
+	* tests/test-basic.sh: create a test.
+
+	* Makefile.am (EXTRA_DIST, TESTS): add tests target for test-basic.
+	(check_PROGRAMS): change to test-dshconfig.
+
+2002-07-24  Junichi Uekawa  <dancer@debian.org>
+
+	* configure.ac: bump up version to 0.20.3
+
+	* Makefile.am: update upload rules from dmachinemon source.
+
+2002-07-23  Junichi Uekawa  <dancer@debian.org>
+
+	* configure.ac: version 0.20.2
+	require automake 1.6
+
+	* Makefile.am: change upload rules for decaton->viper2
+
+	* debian/control: change package names to libdshconfig1.
+
+2002-06-29  Junichi Uekawa  <dancer@debian.org>
+
+	* configure.ac: version 0.20.1
+
+	* libdshconfig.c: add more notes.
+
+	* libdshconfig.h: add declaration
+
+	* Makefile.am (DSHCONFIG_SONAME): soname 1.
+
+	* libdshconfig.c (getline): remove redundant entry.
+	(free_dshconfig_internal): add new function.
+
+2002-06-25  Junichi Uekawa  <dancer@debian.org>
+
+	* configure.ac: probably require automake 1.6
+	bump version to 0.20.0
+
+2002-06-12  Junichi Uekawa  <dancer@debian.org>
+
+	* configure.ac: 0.0.20.1 
+
+	* autogen.sh: add --force. 
+
+2002-06-11  Junichi Uekawa  <dancer@debian.org>
+
+	* configure.ac: version 0.0.20.0
+
+	* Makefile.am: update with dmachinemon source for rules of making debian source
+
+2002-06-04  Junichi Uekawa  <dancer@debian.org>
+
+	* configure.ac: AM_MAINTAINER_MODE
+
+2002-05-31  Junichi Uekawa  <dancer@debian.org>
+
+	* configure.ac: version is 0.0.20pre
+
+	* Makefile.am: update the make rule to fix the automake
+
+	* debian/rules: unnecessary parts removed.
+
+	* autogen.sh: newly add.
+
+	* Makefile.am: add target to create orig.tar.gz
+
+	* debian/changelog: make it non-native package.
+
+	* Makefile.am: add decaton target
+
+2002-05-04  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/rules: use d-shlibmove instead.
+	The implementation seems to be working satisfactory. Great.
+
+2002-05-01  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/changelog: mark for release.
+
+2002-04-21  Junichi Uekawa  <dancer@debian.org>
+
+	* libdshconfig.c (getline): implementation of getline, just enough
+	  to get some working done. (checking for HAVE_GETLINE)
+	  include config.h.
+
+	* configure.ac: check for getline.
+
+	* debian/rules (binary-arch): remove manpage install, no dsh.1
+
+	* Makefile.am (include_HEADERS): changed entry to include include file.
+
+	* debian/control (Build-Depends): depends on libtool
+
+2002-04-20  Junichi Uekawa  <dancer@debian.org>
+
+	* AUTHORS: created
+
+	* NEWS: empty content.
+
+	* README: created
+
+	* Makefile.am (libdshconfig_la_LDFLAGS): created
+
+	* split out libdshconfig from dsh source
+	
+2002-03-31  Junichi Uekawa  <dancer@debian.org>
+
+	* libdshconfig.c (free_dshconfig): free the title and data for each item, fix memleak.
+
+2002-03-30  Junichi Uekawa  <dancer@debian.org>
+
+	* libdshconfig.h: added dshconfig_searchdata
+
+	* libdshconfig.c (dshconfig_searchdata): added
+
+2002-03-28  Junichi Uekawa  <dancer@debian.org>
+
+	* libdshconfig.h: added declaration for dshconfig_splitline.
+
+	* libdshconfig.c (dshconfig_splitline): created a new function, so that this piece of code can be re-used.
+	(read_oneline): changed to use dshconfig_splitline instead
+	(read_oneline): fixing things, so that dancer acpi can use this 
+	parser routine instead.
+
+2002-03-18  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/rules: install the libs and other things in the right package
+
+	* libdshconfig.h: added some ifndefs.
+
+	* Makefile (install): added include
+
+	* debian/rules (binary-arch): added dh_makeshlibs
+
+	* Makefile (install): make install target to use libtool
+	(install): fix minor detail in install target.
+
+	* libdshconfig.c (read_oneline): fix it so that # at the start of line won't cause segv.
+
+	* dsh.conf: modified to make it look different and for debugging dsh.
+
+	* parameter.c (load_configfile): rewrite the config reader using libdshconfig.
+
+	* test-dshconfig.c (main): comment.
+
+	* libdshconfig.c (free_dshconfig): add error check.
+
+	* libdshconfig.h: declare free_dshconfig
+
+	* libdshconfig.c (free_dshconfig): add new function. Probably required.
+
+	* Makefile (install): fixed makefile
+	(libdshconfig.la): making a shared lib.
+
+	* libdshconfig.c (read_oneline): fixing many bugs, to make it work. Yeah, it never compiled.
+	(read_oneline): fix end bug.
+
+	* libdshconfig.h: add declaration for open_dshconfig
+
+	* test-dshconfig.c (main): create a new program to test the function
+
+2002-02-27  Junichi Uekawa  <dancer@debian.org>
+
+	* debian/changelog: Mark for release
+
+2002-02-05  Junichi Uekawa  <dancer@debian.org>
+
+	* dsh.c: some beautification
+	added header files "sys/stat.h" "fnctl.h" declaration
+	to get open() to work.
+
+	* libdshconfig.c (open_dshconfig): making a function implementation to hopefully work.
+
+	* debian/changelog: updated the changelog with the bugfixer.
+
+	* dsh.c (open_devnull): created a new function.
+	(main): uses /dev/null for input as default.
+
+2002-02-03  Junichi Uekawa  <dancer@debian.org>
+
+	* libdshconfig.c (read_oneline): some minor playing around.
+	Aiming to make a basis for config reader usable in dsh, and 
+	also another project I am planning to work on.
+	
+	* libdshconfig.h: created
+	(dshconfig): created
+	(dshconfig_internal): created
+
+	* libdshconfig.c: creating a new file.
+
+2002-01-26  Junichi Uekawa  <dancer@debian.org>
+
+	* dsh.c (main): error check asprintf.
+
+2002-01-25  Junichi Uekawa  <dancer@debian.org>
+
+	* ChangeLog: resume using the ChangeLog file.
+
+	* TODO: created as a memo to document some wishlist.
+
+2001-05-14  Junichi Uekawa  <dancer@netfort.gr.jp>
+
+	* dsh.1: added documentation for homedir configs.
+
+	* dsh.c (parse_options): added support for machines config.
+	(read_machinelist): The machines list support.
+	(parse_options): Configs in homedir too.
+
+2001-05-13  Junichi Uekawa  <dancer@netfort.gr.jp>
+
+	* dsh.1: Created a manpage
+
+	* Makefile: Copied from other project. 
+
+	* dsh.c: Created / started, by
+	dancer@{debian.org,netfort.gr.jp,mikilab.doshisha.ac.jp} 
+

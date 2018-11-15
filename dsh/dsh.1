@@ -1,0 +1,173 @@
+.TH "dsh" 1 "2001 May 13" "Debian-Beowulf/Dancer" "Dancer Tools reference"
+.SH NAME
+dsh \- Distributed shell, or dancer's shell
+.SH SYNOPSIS
+.BI "dsh [-m " "machinename" " | -a | -g " "groupname" "] [-r " \
+"remoteshellname" "] [-c | -w] -- " "commandline"
+.SH DESCRIPTION
+.B dsh
+executes command remotely on several different machines at the same
+time. An utility to effectively do a
+.B "for a in $(seq 1 10); do rsh $a command; done"
+.SH OPTIONS
+The options available are as follows.
+.TP
+.B "--verbose | -v" 
+Verbose output of the execution process is output.
+.PP
+.TP
+.B "--quiet | -q"
+Makes output quieter.
+.PP
+.TP
+.BI "--machine | -m " "[machinename[,machinename]*]"
+Adds 
+.I machinename 
+to the list of machines that the command is exeuted.
+The syntax of 
+.I machinename 
+allows
+.I username@machinename
+where remote shell is invoked with the option to make it of 
+.I username.
+
+From version 0.21.4, it is possible to specify 
+in the format of 
+.I "username@machinename,username@machinename,username@machinename"
+so that multiple hosts can be specified with comma-delimited values.
+
+.TP
+.BI "--all | -a " 
+Add all machines found in 
+.B /etc/dsh/machines.list
+to the list of machines that the specified command is executed.
+
+.TP
+.BI "--group " "groupname" " | -g " "groupname "
+Add all machines found in 
+.BI /etc/dsh/group/ groupname
+to the list of machines that the specified command is executed.
+
+If groupname is on the form
+.BI "@netgroup"
+then the machines in the given netgroup is used to specify the list of
+machines to execute on.
+
+.TP
+.BI "--file " "machinefile" " | -f " "machinefile"
+Add all machines found in the specified file
+to the list of machines that the specified command is executed.
+
+From version 0.21.4, 
+Specifying the same machine several times using any of the 
+machine specification options will result in
+multiple invocations merged into one.
+
+.TP
+.BI "--remoteshell " "shellname " "| -r " "shellname "
+Execute remote shell 
+.I shellname
+as the remote shell. Usually "rsh" and "ssh" are available
+
+.TP
+.BI "--remoteshellopt " "rshoption " "| -o " "rshoption "
+Add one option 
+.I rshoption
+to the list of options passed on to the remote shell. 
+
+.TP
+.BI "--help | -h "
+Output help message and exits.
+
+.TP
+.BI "--wait-shell | -w " 
+Executes on each machine and waits for the execution finishing before
+moving on to the next machine.
+
+.TP
+.BI "--concurrent-shell | -c "
+Executes shell concurrently.
+
+.TP
+.BI "--show-machine-names | -M "
+Prepends machine names on the standard output. Useful to be used in
+conjunction with the 
+.B "--concurrent-shell" 
+option so that the output is slightly more parsable.
+
+.TP
+.BI "--duplicate-input | -i "
+Duplicates the input to dsh process to individual process that are remotely
+invoked. Needs to have 
+.B "--concurrent-shell" 
+set.
+
+.TP
+.BI "--bufsize | -b [" "buffer-size in bytes" "]"
+Sets the buffer size used in replicating input for 
+.B "--duplicate-input" 
+option.
+
+.TP
+.BI "--version | -V "
+Outputs version information and exits.
+
+.TP
+.BI "--num-topology | -N "
+Changes the current topology from 1. 1 is the default behavior of
+spawning the shell from one node to every node. Changing the number to
+a value greater than 2 would result in dsh being spawned on other
+machines as well. 
+.B "BE CAREFUL!! This code has not been tested thoroughly."
+
+.SH "EXIT STATUS"
+Usually zero. There is no real way to usefully use the return value of
+tasks.
+
+On error in command-line options, it will return EXIT_FAILURE.
+.SH "EXAMPLES"
+.TP
+.B "dsh -a w "
+Shows list of users logged in on all workstations.
+.PP
+.TP
+.B "dsh -r ssh -a -- w "
+Shows list of users logged in on all workstations using ssh. (It
+should be of note that when using ssh, ssh-agent is handy.)
+.PP
+.TP
+.B "./dsh -r ssh -m node1 -m node2 -c -- 'echo $HOSTNAME $(cat/proc/loadavg )'"
+Shows the load average of machines node1 and node2.
+.PP
+.SH "FILES"
+.TP
+.B "/etc/dsh/machines.list | $(HOME)/.dsh/machines.list"
+List of machine names to be used for when 
+.B -a
+command-line option is specified.
+.PP
+.TP
+.BI "/etc/dsh/group/" "groupname" " | $(HOME)/.dsh/group/" "groupname" 
+List of machine names to be used for when 
+.B "-g" 
+command-line option is specified.
+.PP
+.TP
+.B "/etc/dsh/dsh.conf | $(HOME)/.dsh/dsh.conf "
+Configuration file containing the day-to-day default. 
+.PP
+.SH "BUGS"
+There should be a 
+.B "dcp"
+for copying files to remote systems.
+
+Configuration files should really be able to do something more than it
+does now.
+
+Currently, the algorithm for the 
+.B "-M"
+option is not verified to be right, yet. 
+.SH "AUTHOR"
+Junichi Uekawa (dancer@debian.org)
+.SH "SEE ALSO"
+.BR "rsh" "(1), " "ssh" "(1)"

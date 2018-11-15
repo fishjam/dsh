@@ -1,0 +1,11 @@
+Some wishlist:
+
+     fanout with dshd opening connections, through ssh.
+     Some kind of FIFO set up, with something listening onto it.
+
+     Bug with fanout option, rsh requires some quoting. Dsh does not preserve the quotings.
+
+
+     rsh with timeout : rsh does not time out and fail... bug in rsh ?
+
+     $Id: TODO,v 1.2 2002/05/26 11:27:35 dancer Exp $
