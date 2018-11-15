@@ -185,6 +185,7 @@ print_help (void)
 	   "-M --show-machine-names        Prepend the host name on output\n"
 	   "-i --duplicate-input           Duplicate input given to dsh\n"
 	   "-b --bufsize                   Change buffer size used in input duplication\n"
+	   "-u --user [username]           Provide login user name\n"
 	   "-m --machine [machinename]     Execute on machine\n"
 	   "-n --num-topology              How to divide the machines\n"
 	   "-a --all                       Execute on all machines\n"
@@ -320,6 +321,7 @@ parse_options ( int ac, char ** av)
     {"bufsize", required_argument, 0, 'b'},
 
 				/* machine-specification */
+	{"user", required_argument, 0, 'u'},
     {"machine", required_argument, 0, 'm'},
     {"num-topology", required_argument, 0, 'n'},
     {"all", no_argument, 0, 'a' },
@@ -333,14 +335,14 @@ parse_options ( int ac, char ** av)
     {"help", no_argument, 0, 'h'},
     {"version", no_argument, 0, 'V'},
     {"wait-shell", no_argument, 0, 'w'},
-    {"concurrent-shell", no_argument, 0, 'c'},
+	{"concurrent-shell", no_argument, 0, 'c'},
     {0,0,0,0}
   };
 #else
 #define getopt_long(a,b,c,d,e) getopt(a,b,c)
 #endif  
   
-  while((c = getopt_long (ac, av, "vqm:ar:f:g:hVcwo:Mn:ib:", long_options, &index_point)) != -1)
+  while((c = getopt_long (ac, av, "vqu:m:ar:f:g:hVcwo:Mn:ib:", long_options, &index_point)) != -1)
     {
       switch (c)
 	{
@@ -395,7 +397,11 @@ parse_options ( int ac, char ** av)
 	case 'b':
 	  if (verbose_flag) printf (_("Buffer size used for dupliation\n"));
 	  buffer_size = atoi(optarg);	  
-	  break;	  
+	  break;
+	case 'u':
+		if (verbose_flag) printf (_("Adding user %s for login\n"), optarg);
+	  login_user = strdup(optarg);
+	  break;
 	case 'm':
 	  if (verbose_flag) printf (_("Adding machine %s to list\n"), optarg);
 	  machinelist = split_machines_list_and_add_machines (machinelist, optarg);

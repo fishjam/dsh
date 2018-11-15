@@ -21,6 +21,7 @@ void * malloc_with_error(int size);
 int load_configfile(const char * dsh_conf);
 int parse_options ( int ac, char ** av);
 extern char * remoteshell_command;
+extern char * login_user;
 
 extern int  verbose_flag;		/** verbosity flag */
 extern int wait_shell;		/** waiting for shell to execute (concurrence) */

@@ -38,7 +38,9 @@
 #include "gettext.h"
 #define _(A) gettext(A)
 
-char * remoteshell_command="rsh";
+char * remoteshell_command="ssh";
+char * login_user=NULL; /* TODO: not free? exit after exec, not problem */
+
 int verbose_flag=0;		/* verbosity flag */
 int wait_shell=1;		/* waiting for shell to execute (concurrence) */
 int pipe_option=0;	        /* show machine names -- piping option. */
@@ -230,7 +232,8 @@ add_fd_to_output_array(int fd)
  */
 static int
 execute_rsh_single (const char * remoteshell_command, 
-		    const linkedlist * remoteshell_command_opt_r, 
+		    const linkedlist * remoteshell_command_opt_r,
+		    const char * param_username,
 		    const char * param_machinename,
 		    const linkedlist * rshcommandline_r,
 		    int pipe_option /** The pipe option */)
@@ -249,10 +252,9 @@ execute_rsh_single (const char * remoteshell_command,
     {				/* child process */
       /* Must NOT fork again from this point until I say otherwise */
       linkedlist * tmp = NULL;
-      char * machinename = 
-	strdup (param_machinename); /* we will always exit() from here, so
+      char * machinename = strdup (param_machinename); /* we will always exit() from here, so
 				       no need to free this myself. */
-      char * username = machinename;
+
       linkedlist * local_remoteshell_command_opt_r = lldup(remoteshell_command_opt_r);      
 
       /* input piping */
@@ -263,20 +265,31 @@ execute_rsh_single (const char * remoteshell_command,
 	  close (input_pipe[0]);
 	  /* Must NOT fork again before this point. */
 	}
-				/* process to handle username@hostname */
-      if (NULL != (machinename = strchr(machinename,'@')))
-	{			/* username was specified */
-	  *(machinename++) = 0 ; /* cut the string at @ and point to following
-				  string (machine name) */
-	  local_remoteshell_command_opt_r = lladd (local_remoteshell_command_opt_r, "-l");
-	  local_remoteshell_command_opt_r = lladd (local_remoteshell_command_opt_r, username);
-	}
-      else
-	{			/* no username was specified */
-	  machinename=username;	      
-	  username=NULL;
-	}
-      
+
+	char * username = NULL;
+	if(param_username != NULL){
+	    /* if provide username */
+       username = param_username;
+	} else {
+        username = machinename;
+        /* process to handle username@hostname */
+        if (NULL != (machinename = strchr(machinename,'@')))
+        {			/* username was specified */
+            *(machinename++) = 0 ; /* cut the string at @ and point to following string (machine name) */
+        }
+        else
+        {			/* no username was specified */
+            machinename=username;
+            username=NULL;
+        }
+    }
+
+    if(username != NULL){
+        local_remoteshell_command_opt_r = lladd (local_remoteshell_command_opt_r, "-l");
+        local_remoteshell_command_opt_r = lladd (local_remoteshell_command_opt_r, username);
+        username = NULL;
+    }
+
       tmp = llcat (tmp, local_remoteshell_command_opt_r);
       tmp = lladd (tmp, machinename);
       tmp = llcat (tmp, lldup(rshcommandline_r));
@@ -333,8 +346,9 @@ execute_rsh_single (const char * remoteshell_command,
  * TODO: quote properly.
  */
 static int
-execute_rsh_multiple (const char * remoteshell_command, 
-		      const linkedlist * remoteshell_command_opt_r, 
+execute_rsh_multiple (const char * remoteshell_command,
+		      const linkedlist * remoteshell_command_opt_r,
+		      const char* username_r,
 		      const linkedlist * machinelist, 
 		      int nummachines, 
 		      const linkedlist * rshcommandline_r)
@@ -386,7 +400,7 @@ execute_rsh_multiple (const char * remoteshell_command,
   extraparam=lladd (extraparam, "--");
   rshcommandline_r = llcat (extraparam, lldup(rshcommandline_r));
 
-  return execute_rsh_single (remoteshell_command, remoteshell_command_opt_r, machinelist->string, rshcommandline_r, 0);
+  return execute_rsh_single (remoteshell_command, remoteshell_command_opt_r, username_r, machinelist->string, rshcommandline_r, 0);
 }
 
 /**
@@ -401,14 +415,15 @@ execute_rsh_multiple (const char * remoteshell_command,
 static int
 execute_rsh ( const char * remoteshell_command, 
 	      const linkedlist * remoteshell_command_opt_r,
+	      const char* username_r,
 	      const linkedlist * machinelist,
 	      int nummachines /** The number of machines to invoke rsh at the same time */,
 	      const linkedlist * rshcommandline_r)
 {				
   if (nummachines == 1)
-    return execute_rsh_single (remoteshell_command, remoteshell_command_opt_r, machinelist->string, rshcommandline_r, pipe_option);
+    return execute_rsh_single (remoteshell_command, remoteshell_command_opt_r, username_r, machinelist->string, rshcommandline_r, pipe_option);
   else
-    return execute_rsh_multiple (remoteshell_command, remoteshell_command_opt_r, machinelist, nummachines, rshcommandline_r);
+    return execute_rsh_multiple (remoteshell_command, remoteshell_command_opt_r, username_r, machinelist, nummachines, rshcommandline_r);
 }
 
 /**
@@ -483,7 +498,7 @@ do_shell (linkedlist* machinelist, linkedlist*rshcommandline_r)
 	{
 	  fprintf (stderr, _("--- Executing on %s \n"), machinelist->string);
 	}
-      if (execute_rsh (remoteshell_command, remoteshell_command_opt_r, machinelist, nummachines, rshcommandline_r))
+      if (execute_rsh (remoteshell_command, remoteshell_command_opt_r, login_user, machinelist, nummachines, rshcommandline_r))
 	{
 	  fprintf(stderr, _("%s: execute_rsh failed, rsh invocation failure.\n"), PACKAGE);
 	  return -1;
