@@ -16,6 +16,8 @@
  - libdshconfig-0.20.10.cvs.1: https://www.netfort.gr.jp/~dancer/software/downloads/libdshconfig-0.20.10.cvs.1.tar.gz
  
 # Build & Configuration
+
+ - 1.build(consider you are in kerberos server, can not install to default position)
 ```
 cd libdshconfig
 ./configure --prefix=$HOME/local && make && make install
@@ -27,6 +29,7 @@ cd ../dsh
   && make \
   && make install
 ```
+ - 2.add ~/local/bin to your PATH environment variable.
 
 
  
