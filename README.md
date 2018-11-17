@@ -1,7 +1,15 @@
 # DSH enhanced version
-
  - [DSH](https://www.netfort.gr.jp/~dancer/software/dsh.html.en): dancer's shell / distributed shell, 
- - [Pssh](https://www.tecmint.com/execute-commands-on-multiple-linux-servers-using-pssh/): Execute Commands on Multiple Remote Linux Servers Using Single Terminal
+
+# Change list:
+ - 1.change default shell from rsh to ssh
+ - 2.add command parameter to provide login user name: -u | --user username 
+   - this is very important for me. So I can chaneg remote user without modify the group conifgruation file or ssh_config file on kerberos server. 
+   - Login user are considered in the following order:
+     - 1.new added param: -u|--user username
+     - 2.username@machinename in dsh configuration file(group or machines)
+     - 3.ssh_config file(~/.ssh/config)
+     - 4.current username
 
 # Base Version:
  - dsh-0.22: https://www.netfort.gr.jp/~dancer/software/downloads/dsh-0.22.0.tar.gz
@@ -20,9 +28,6 @@ cd ../dsh
   && make install
 ```
 
- 
-# Change list:
- - 1.add -u --user [username] Provide login user name
- - 2.change default shell from rsh to ssh
+
  
  
