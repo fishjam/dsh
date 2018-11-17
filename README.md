@@ -4,7 +4,7 @@
 # Change list:
  - 1.change default shell from rsh to ssh
  - 2.add command parameter to provide login user name: -u | --user username 
-   - this is very important for me. So I can chaneg remote user without modify the group conifgruation file or ssh_config file on kerberos server. 
+   - this is very important for me. So I can change remote user without modify the group conifgruation file or ssh_config file on kerberos server. 
    - Login user are considered in the following order:
      - 1.new added param: -u|--user username
      - 2.username@machinename in dsh configuration file(group or machines)
