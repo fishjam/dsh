@@ -252,8 +252,9 @@ execute_rsh_single (const char * remoteshell_command,
     {				/* child process */
       /* Must NOT fork again from this point until I say otherwise */
       linkedlist * tmp = NULL;
-      char * machinename = strdup (param_machinename); /* we will always exit() from here, so
+      char * full_machinename = strdup (param_machinename); /* we will always exit() from here, so
 				       no need to free this myself. */
+      char * machinename = full_machinename; 
 
       linkedlist * local_remoteshell_command_opt_r = lldup(remoteshell_command_opt_r);      
 
@@ -269,7 +270,13 @@ execute_rsh_single (const char * remoteshell_command,
 	char * username = NULL;
 	if(param_username != NULL){
 	    /* if provide username */
-       username = param_username;
+           username = param_username;
+           if (NULL != (machinename = strchr(full_machinename,'@')))
+            {			/* username was specified */
+               *(machinename++) = 0 ; /* cut the string at @ and point to following string (machine name) */
+            } else {
+               machinename = full_machinename;
+            }
 	} else {
         username = machinename;
         /* process to handle username@hostname */

@@ -2,7 +2,7 @@
 .SH NAME
 dsh \- Distributed shell, or dancer's shell
 .SH SYNOPSIS
-.BI "dsh [-m " "machinename" " | -a | -g " "groupname" "] [-r " \
+.BI "dsh [-u " "username" "] [-m " "machinename" " | -a | -g " "groupname" "] [-r " \
 "remoteshellname" "] [-c | -w] -- " "commandline"
 .SH DESCRIPTION
 .B dsh
@@ -18,6 +18,9 @@ Verbose output of the execution process is output.
 .TP
 .B "--quiet | -q"
 Makes output quieter.
+.TP
+.B "--user | -u" "username" 
+Provide login user name.
 .PP
 .TP
 .BI "--machine | -m " "[machinename[,machinename]*]"
