@@ -490,6 +490,9 @@ run_input_forking_child_processes_process()
 int
 do_shell (linkedlist* machinelist, linkedlist*rshcommandline_r)
 {
+  /* reverse the machine list, so can execute order by group configuration file */
+  machinelist = llreverse(machinelist);
+
   int nummachines = llcount(machinelist) / num_topology ;  
   int i;
 
